@@ -1,5 +1,13 @@
 from django.db import models
 
+class CourseManager(models.Manager):
+    
+    def search(self, query):
+        return self.get_queryset().filter(
+            models.Q(name__icontains=query) | \
+            models.Q(description__icontains=query)
+        )
+
 class Course(models.Model):
     name = models.CharField('Nome', max_length=100)
     slug = models.SlugField('Atalho')
@@ -20,3 +28,5 @@ class Course(models.Model):
     updated_at = models.DateTimeField(
         'Atualizado em', auto_now=True
     )
+
+    objects = CourseManager()
